@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Library Report</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/report.css' %}">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 1200px;
+      margin-top: 3rem;
+      margin-bottom: 4rem;
+      flex-grow: 1;
+    }
+    h1, h4, h5 {
+      color: #ffffff;
+    }
+    .section-title {
+      border-left: 5px solid #0d6efd;
+      padding-left: 12px;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 123, 255, 0.7);
+    }
+    .card h5 {
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    table thead {
+      background-color: #2c2c2c;
+      color: #ffffff;
+    }
+    table tbody tr td {
+      color: #e0e0e0;
+    }
+    p {
+      font-size: 1rem;
+    }
+    /* Scrollable table for small devices */
+    .table-responsive {
+      max-height: 350px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    /* Image styling */
+    .theory-image {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      filter: brightness(1.1);
+    }
+    /* Summary cards */
+    .summary-card p.fs-2 {
+      color: #0d6efd; /* Bootstrap primary blue */
+      font-weight: 900;
+      letter-spacing: 1.5px;
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      color: #777;
+      border-top: 1px solid #333;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Title -->
+  <h1 class="mb-4 text-center fw-bold">📊 Library Report Dashboard</h1>
+
+  <!-- Theory Section -->
+  <div class="card p-4 mb-5">
+    <h4 class="section-title">Introduction & Theory</h4>
+    <p>
+      This Library Management System applies core principles of database management to efficiently handle
+      the cataloging of books, registration of members, and tracking of book issues and returns. Leveraging
+      relational databases allows data integrity and supports complex queries for reporting and analytics.
+    </p>
+    <p>
+      The dashboard presented here provides a comprehensive overview through:
+      <ul>
+        <li>Aggregated metrics on books, members, and issued items</li>
+        <li>Visual analytics showcasing book category distribution and user activity</li>
+        <li>Real-time data representation aiding library administrators to make informed decisions</li>
+      </ul>
+    </p>
+    <p>
+      The system supports scalability and ensures data consistency, crucial for modern library environments.
+      It uses Django as the backend framework, interfacing with a SQL database, and Chart.js for interactive
+      visualizations.
+    </p>
+
+    <img src="https://i.ytimg.com/vi/NC7515jXfwg/maxresdefault.jpg" class="d-block" style="width: 300px; height: auto;" alt="Library Image"/>
+
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-4 mb-5 text-center">
+    <div class="col-md-4 summary-card">
+      <div class="card p-4">
+        <h5>Total Books</h5>
+        <p class="fs-2">{{ total_books }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 summary-card">
+      <div class="card p-4">
+        <h5>Total Members</h5>
+        <p class="fs-2">{{ total_members }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 summary-card">
+      <div class="card p-4">
+        <h5>Total Issued Items</h5>
+        <p class="fs-2">{{ total_cart_items }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphs -->
+  <div class="row mb-5">
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4">
+        <h5>Books by Category</h5>
+        <canvas id="chartCategories" height="300"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4">
+        <h5>Top Users by Issued Items</h5>
+        <canvas id="chartUsers" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tables -->
+  <div class="row mb-5">
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4">
+        <h5 class="mb-4">Latest Members</h5>
+        <div class="table-responsive">
+          <table class="table table-dark table-striped table-hover mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Member</th>
+                <th>Login Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in members %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ m.username }}</td>
+                <td>{{ m.login_time }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="3" class="text-center">No member data</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4">
+        <h5 class="mb-4">Recent Books</h5>
+        <div class="table-responsive">
+          <table class="table table-dark table-striped table-hover mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in recent_books %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ b.title }}</td>
+                <td>{{ b.author }}</td>
+                <td>{{ b.category }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" class="text-center">No books found</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conclusion -->
+  <div class="card p-4">
+    <h4 class="section-title">Conclusion & Insights</h4>
+    <p>
+      This report equips library administrators with deep insights into resource utilization and member
+      engagement. Using this data, strategic decisions can be made to enhance library services, improve
+      book acquisitions, and boost member satisfaction. The visual analytics promote quick understanding
+      and trend recognition.
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 LibraDash Library Management System. All rights reserved.
+</footer>
+
+<script>
+  // Chart 1: Books by Category (Pie)
+  new Chart(document.getElementById('chartCategories'), {
+    type: 'pie',
+    data: {
+      labels: {{ cat_labels|safe }},
+      datasets: [{
+        data: {{ cat_counts|safe }},
+        backgroundColor: ['#ff6384','#36a2eb','#ffce56','#4bc0c0','#9966ff','#ff9f40']
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          labels: { color: 'white' }
+        },
+        title: {
+          display: true,
+          text: 'Books by Category',
+          color: 'white',
+          font: { size: 18 }
+        }
+      }
+    }
+  });
+
+  // Chart 2: Top Users by Issued Items (Bar)
+  new Chart(document.getElementById('chartUsers'), {
+    type: 'bar',
+    data: {
+      labels: {{ user_labels|safe }},
+      datasets: [{
+        label: 'Issued Items',
+        data: {{ user_counts|safe }},
+        backgroundColor: '#36a2eb'
+      }]
+    },
+    options: {
+      scales: {
+        x: {
+          ticks: { color: 'white' },
+          grid: { color: 'rgba(255,255,255,0.1)' }
+        },
+        y: {
+          ticks: { color: 'white' },
+          grid: { color: 'rgba(255,255,255,0.1)' },
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { color: 'white' }
+        },
+        title: {
+          display: true,
+          text: 'Top Users by Issued Items',
+          color: 'white',
+          font: { size: 18 }
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

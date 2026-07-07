@@ -1,0 +1,45 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block title %}Student Members{% endblock %}
+
+{% block content %}
+<h4 class="mb-3">👥 Student Login Records <span class="badge bg-secondary">{{ students|length }}</span></h4>
+
+<div class="container px-0">
+    {% for student in students %}
+        <div class="card mb-2 bg-dark text-light border-secondary shadow-sm" style="font-size: 0.85rem;">
+            <div class="row g-0 align-items-center">
+                <div class="col-auto">
+                    {% if student.photo %}
+                        <img src="{{ student.photo.url }}" alt="{{ student.name }}"
+                             class="img-fluid rounded-start"
+                             style="height: 75px; width: 75px; object-fit: cover; margin: 8px;">
+                    {% else %}
+                        <img src="{% static 'myapp1/images/default_student.png' %}" alt="No photo"
+                             class="img-fluid rounded-start"
+                             style="height: 75px; width: 75px; object-fit: cover; margin: 8px;">
+                    {% endif %}
+                </div>
+                <div class="col">
+                    <div class="card-body py-2 px-3">
+                        <h6 class="card-title mb-1">{{ student.name }}</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Dept:</strong> {{ student.department }}</p>
+                                <p class="mb-1"><strong>Card:</strong> {{ student.lib_card_no }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Email:</strong> {{ student.email }}</p>
+                                <p class="mb-0 text-muted"><small>Login: {{ student.login_time|date:"M d, Y H:i" }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted text-center">No student logins available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

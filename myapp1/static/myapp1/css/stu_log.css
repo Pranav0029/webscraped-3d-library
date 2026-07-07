@@ -1,0 +1,27 @@
+body, input, button {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.login-container {
+    background-color: #1e1e1e;
+    max-width: 400px;
+    width: 100%;
+    border: 1px solid #444;
+}
+
+.code-style {
+    background-color: #2c2c2c;
+    color: #f5f5f5;
+    border: 1px solid #555;
+}
+
+.code-style:focus {
+    background-color: #1f1f1f;
+    border-color: #17a2b8; /* For student */
+    color: #fff;
+    box-shadow: none;
+}
+
+.btn-info {
+    font-weight: bold;
+}

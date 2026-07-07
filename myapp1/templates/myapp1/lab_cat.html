@@ -1,0 +1,40 @@
+{% extends "myapp1/base.html" %}
+{% load static %}
+
+{% block title %}📚 Library by Category{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">📚 Library Collection by Category</h2>
+
+{# Step 1: Get all categories encountered so far #}
+
+{% for group in grouped_books %}
+    <div class="mb-4">
+        <h4 class="text-info border-bottom border-secondary pb-1">{{ group.grouper }}</h4>
+
+        <div class="list-group">
+            {% for book in group.list %}
+                <div class="list-group-item bg-black text-light border-secondary d-flex justify-content-between align-items-center flex-wrap shadow-sm mb-2" style="border-radius: 8px;">
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                        <div class="me-md-3 mb-2 mb-md-0">
+                            <h6 class="mb-0">{{ book.title }}</h6>
+                        </div>
+                        <div>
+                            <small class="text-muted">{ Author : {{ book.author }} }</small>
+                        </div>
+                        <span class="badge bg-info text-dark ms-md-3">{{ book.category }}</span>
+                    </div>
+
+                    {% if book.link %}
+                        <a href="{{ book.link }}" target="_blank" class="btn btn-sm btn-outline-primary">Read</a>
+                    {% else %}
+                        <button class="btn btn-sm btn-secondary" disabled>No Link</button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% empty %}
+    <p class="text-muted text-center">No books available.</p>
+{% endfor %}
+{% endblock %}

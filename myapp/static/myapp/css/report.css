@@ -1,0 +1,24 @@
+body {
+  background-color: #121212;
+  color: #e0e0e0; /* general text color */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure all paragraph text and list items are white */
+p, ul, li {
+  color: #ffffff !important;
+}
+
+/* Ensure card headers are white */
+.card h4, .card h5 {
+  color: #ffffff;
+}
+
+/* Tables text color */
+table thead, table tbody tr td {
+  color: #ffffff;
+}

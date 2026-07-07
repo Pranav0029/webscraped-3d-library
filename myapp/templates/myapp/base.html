@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Dark App{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS (Dark theme via data-bs-theme) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+   <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-dark text-light d-flex flex-column min-vh-100">
+
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">Online_Library</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://127.0.0.1:8000/myapp1/first/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://127.0.0.1:8000/myapp1/lab_cat/">Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Account</a>
+                    </li>
+                </ul>
+
+                <!-- Search Form -->
+                <form class="d-flex" role="search" action="#" method="get">
+                    <input class="form-control form-control-sm me-2 bg-dark text-light border-secondary"
+                           type="search" placeholder="Search books..." aria-label="Search" name="q">
+                    <button class="btn btn-outline-info btn-sm" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="container flex-fill py-4">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-center py-3 border-top border-secondary mt-auto">
+        <div class="text-muted small">
+            © 2025 DarkLibrary | Crafted with 🖤 using Django + Bootstrap
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
